@@ -85,9 +85,9 @@ Die Startup-Datei einer Spring-Boot-Applikation, die auch in unserem Falle mitge
 
 ```java
 @SpringBootApplication
-public class SimpleSpringBootApplication {
+public class TodoListWebApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(SimpleSpringBootApplication.class, args);
+		SpringApplication.run(TodoListWebApplication.class, args);
 	}
 }
 ```
