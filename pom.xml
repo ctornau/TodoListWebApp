@@ -8,11 +8,11 @@
 		<version>2.3.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.examplespringboot</groupId>
-	<artifactId>simplespringboot</artifactId>
+	<groupId>org.todolistwebapp</groupId>
+	<artifactId>todolistwebapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>simplespringboot</name>
-	<description>Beispielprojekt einer einfachen Spring-Boot-Anwendung</description>
+	<name>todolistwebapp</name>
+	<description>Beispielprojekt einer einfachen Spring-Boot-Anwendung, die eine Todo-Listen-Verwaltung darstellt</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -125,7 +125,7 @@
 					</goals>
 						<configuration>
 							<classifier>spring-boot-deamon</classifier>
-							<mainClass>org.examplespringboot.org.todolistwebapp.TodoListWebApplication</mainClass>
+							<mainClass>org.todolistwebapp.TodoListWebApplication</mainClass>
 							<executable>true</executable>
 						</configuration>
 					</execution>
