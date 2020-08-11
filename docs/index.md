@@ -28,12 +28,12 @@ Erster wichtiger Teil dieser Datei ist die Referenz auf das Parent-Pom _spring-b
 Im Folgenden finden sich Parameter, die bei der Initialisierung angegeben worden sind:
 
 ```xml
-<groupId>com.examplespringboot</groupId>
-<artifactId>simplespringboot</artifactId>
+<groupId>org.todolistwebapp</groupId>
+<artifactId>todolistwebapp</artifactId>
 <version>0.0.1-SNAPSHOT</version>
-<name>simplespringboot</name>
-<description>Beispielprojekt einer einfachen Spring-Boot-Anwendung</description>
-
+<name>todolistwebapp</name>
+<description>Beispielprojekt einer einfachen Spring-Boot-Anwendung, 
+die eine Todo-Listen-Verwaltung darstellt</description>
 <properties>
     <java.version>11</java.version>
 </properties>
