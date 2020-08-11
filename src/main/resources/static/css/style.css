@@ -1,0 +1,30 @@
+body {
+  padding-top: 5rem;
+}
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.website-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: xx-large;
+  margin-left: 16px;
+}
+
+.website-title-small {
+  font-family: 'Permanent Marker', cursive;
+  margin-left: 16px;
+  font-size: medium;
+}
+
+.todolist-maincontainer {
+  margin-top:10px;
+}
+
+.tablecellbig {
+  width:60%
+}
+
+.tablecellsmall {
+  width:10%
+}

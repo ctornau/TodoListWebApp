@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Eine Anwendung zur Pflege einer persönlichen Todo-Liste">
+    <meta name="author" content="Todo-Liste">
+    <title>Todo-Liste</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <!-- Custom styles -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{datatables/css/jquery.dataTables.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{datatables/css/dataTables.bootstrap4.min.css}"/>
+
+    <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<body>
+<div class="container-fluid bg-success fixed-top" >
+    <div class="page-header">
+        <h1 class="text-light website-title">Todo-Liste</h1>
+        <h2 class="text-light website-title-small">Einfache Aufgabenverwaltung <span th:text="${name}"></span></h2>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-success">
+        <a class="navbar-brand" href="#">
+            <svg class="bi bi-house-door" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 01.708 0l6 6a.5.5 0 01.146.354v7a.5.5 0 01-.5.5H9.5a.5.5 0 01-.5-.5v-4H7v4a.5.5 0 01-.5.5H2a.5.5 0 01-.5-.5v-7a.5.5 0 01.146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 01.5-.5h3a.5.5 0 01.5.5v4h3.5V7.707L8 2.207l-5.5 5.5z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M13 2.5V6l-2-2V2.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5z" clip-rule="evenodd"/>
+            </svg>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="create">Neuen Eintrag anlegen</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                 <li class="nav-item">
+                     <a class="nav-link" href="logout">Logout</a>
+                 </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<main role="main" class="container todolist-maincontainer">
+    <div class="starter-template">
+        <table id="maintable" class="display" style="width:100%;">
+            <colgroup>
+                <col class="tablecellbig">
+                <col class="tablecellsmall">
+                <col class="tablecellsmall">
+                <col class="tablecellsmall">
+                <col class="tablecellsmall">
+                <col class="tablecellsmall">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Erstellungsdatum</th>
+                <th>Startdatum</th>
+                <th>Abschlussdatum</th>
+                <th>Stand</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="todotask: ${tasks}">
+                <td th:text="${todotask.name}">Todotask Name</td>
+                <td th:text="${#calendars.format(todotask.creationTime,'dd. MMMM yyyy')}"></td>
+                <td th:text="${#calendars.format(todotask.startTime,'dd. MMMM yyyy')}"></td>
+                <td th:text="${#calendars.format(todotask.finishTime,'dd. MMMM yyyy')}"></td>
+                <td th:text="${todotask.state.displayValue}"></td>
+                <td><a href="action" th:href="@{action(id=${todotask.id},action=${todotask.nextAction})}" th:text="${todotask.nextActionText}">Aktion</a></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Erstellungsdatum</th>
+                <th>Startdatum</th>
+                <th>Abschlussdatum</th>
+                <th>Stand</th>
+                <th>Aktion</th>
+            </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</main><!-- /.container -->
+
+<script th:src="@{/jquery/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{/popper/popper.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{datatables/js/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{datatables/js/dataTables.bootstrap4.min.js}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#maintable').DataTable({
+       language: {
+        processing:     "Bitte warten...",
+        search:         "Suche:",
+        lengthMenu:     "_MENU_ Einträge anzeigen",
+        info:           "_START_ bis _END_ von _TOTAL_ Einträgen",
+        infoEmpty:      "Keine Daten vorhanden",
+        infoFiltered:   "(gefiltert von _MAX_ Einträgen)",
+        infoPostFix:    "",
+        loadingRecords: "Wird geladen...",
+        zeroRecords:    "Keine Einträge vorhanden",
+        emptyTable:     "Keine Daten in der Tabelle vorhanden",
+        paginate: {
+            first:      "Erste",
+            previous:   "Zurück",
+            next:       "Nächste",
+            last:       "Letzte"
+        },
+        aria: {
+            sortAscending:  ": aktivieren, um Spalte aufsteigend zu sortieren",
+            sortDescending: ": aktivieren, um Spalte absteigend zu sortieren"
+        }
+       }
+    });
+} );
+</script>
+
+</body>
+</html>

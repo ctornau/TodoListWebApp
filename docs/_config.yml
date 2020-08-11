@@ -1,0 +1,4 @@
+theme: jekyll-theme-leap-day
+title: Eine einfache Spring Boot Application
+description: Schritt-für-Schritt Anleitung zum Aufbau einer Spring Boot Applikation für das Web
+show_downloads: false
