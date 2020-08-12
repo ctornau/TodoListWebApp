@@ -1,8 +1,12 @@
-# Einführung Spring Boot
+# Die Todolisten-WebApp
 
-Bei [Spring Boot](https://spring.io/projects/spring-boot) handelt es sich um ein Java-Framework, in welchem serverbasierte Anwendungen implementiert werden können. Dabei folgt es dem Prinzip [Konvention vor Konfiguration (convention over configuration)](https://en.wikipedia.org/wiki/Convention_over_configuration), indem die einzelnen Module des Frameworks mit einer Default-Konfiguration versehen worden sind und der Entwickler nur bei Änderungen eingreifen muss. Dies ist ein Unterschied zu dem Standard-[Spring-Framework](https://spring.io/projects/spring-framework), wo der Entwickler selbst für die komplette Konfiguration zuständig ist.
+Die Todolisten-Webapp stellt eine Verwaltungsanwendung für Aufgaben da. Sie ist multitenant-fähig, d.h. kann von mehreren Personen gleichzeitig genutzt werden, ohne dass diese sich untereinander stören. Zusätzlich sind diverse Services eingebaut wie der Login über Google oder das Versenden von Emails über den Aufgabenstatus.
 
-# Initialisierung mit Hilfe von Spring Starter
+Die Applikation ist mithilfe von [Spring Boot](https://spring.io/projects/spring-boot) gebaut. Bei [Spring Boot](https://spring.io/projects/spring-boot) handelt es sich um ein Java-Framework, in welchem serverbasierte Anwendungen implementiert werden können. Dabei folgt es dem Prinzip [Konvention vor Konfiguration (convention over configuration)](https://en.wikipedia.org/wiki/Convention_over_configuration), indem die einzelnen Module des Frameworks mit einer Default-Konfiguration versehen worden sind und der Entwickler nur bei Änderungen eingreifen muss. Dies ist ein Unterschied zu dem Standard-[Spring-Framework](https://spring.io/projects/spring-framework), wo der Entwickler selbst für die komplette Konfiguration zuständig ist.
+
+# Aufbau des Beispielprojektes
+
+## Initialisierung mithilfe von Spring Starter
 
 Spring Boot lässt sich sehr einfach initialisieren, indem die Webseite [Spring Initializr](https://start.spring.io/) genutzt wird. Hier werden die Grundeinstellungen, welches Build-Tool, welche Programmiersprache in welcher Version, welche Spring-Boot-Version genutzt und welche Benennung das Projekt besitzen soll, angegeben. Zusätzlich lassen sich die einzelnen Module von Spring Boot wählen, die eingebunden werden sollen. Mit einem _Ctrl-Enter_ lässt sich eine ZIP-Datei herunterladen, die sich in die Entwicklungsumgebung laden lässt. Dies ist der Grundaufbau des Projektes.
 
@@ -10,7 +14,6 @@ Grundsätzlich lässt sich eine Spring-Boot-Applikation auch lokal über die Kom
 
 Für den nächsten Abschnitt haben wir Java als Programmiersprache gewählt, Version 11 angegeben, Maven als Buildtool selektiert und die web-Unterstützung konfiguriert. Des Weiteren haben wir die Benennungsparameter des Projektes angegeben.
 
-# Aufbau des ersten Beispielprojektes
 
 ## Spring Boot basiert auf Maven
 
@@ -363,8 +366,38 @@ sendgrid.senderemailaddress=die-absenderadresse@somewhere.com
 
 MySQL Docker Start-Up
 
-```docker run --detach --name=test-mysql -p 52000:3306  --env="MYSQL_ROOT_PASSWORD=mypassword" mysql```
+```docker run --name springboot-mariadb -e MYSQL_ROOT_PASSWORD=pass!word -e MYSQL_DATABASE=springbootdb -p 3306:3306 -d mariadb:latest```
 
+Kubernetes-Deployment von MariaDB mithilfe von  
+
+```kubectl run mariadb --image=mariadb:latest --env="MYSQL_ROOT_PASSWORD=pass!word" --env="MYSQL_DATABASE=springbootdb" --port=3306```
+
+Das Command ```kubectl get pods``` zeigt einen Pod:
+
+```text
+NAME                       READY   STATUS    RESTARTS   AGE
+mariadb-67fb996878-q5qmm   1/1     Running   0          2m28s
+```
+
+Mithilfe von ```kubectl delete pod mariadb-***``` lässt sich der Pod entfernen. Es wird jedoch sogleich ein neuer Pod gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
+
+Mithilfe von 
+
+```kubectl get deployment mariadb -o yaml > k8s/mariadb-deployment.yaml```
+
+lässt sich das Deployment in einer YAML-Datei persistieren. 
+
+Das Deployment kann mit 
+
+```kubectl delete deployment mariadb```
+
+wieder entfernt werden.
+
+Mit dem Befehl
+
+```kubectl create -f k8s/mariadb-deployment.yaml```
+
+lässt sich das Deployment aus der YAML-Datei wieder einspielen. Der Pod wird wieder gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
 
 # Weitere Dokumentation
 
