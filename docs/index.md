@@ -152,7 +152,7 @@ Auch von der Kommandozeile lässt sich die Applikation starten. Hierzu muss zun�
 
 ```text
 cd target
-java -jar simplespringboot-0.0.1-SNAPSHOT.jar
+java -jar todolistwebapp-0.0.1-SNAPSHOT.jar
 ```
 
 ## Mit Hilfe von Maven
@@ -172,7 +172,7 @@ Dies kann über das Maven-Menü auf der rechten Seite von IntelliJ geschehen. Hi
 Ist Docker lokal installiert, kann mithilfe von 
 
 ```text
-docker run -p8080:8080 ctornau/simplespringboot
+docker run -p8080:8080 ctornau/todolistwebapp
 ```
 
 das automatisch generierte Docker-Image heruntergeladen und gestartet werden. Dabei handelt es sich nicht anders als bei den anderen Startmöglichkeiten um einen Build, der auf der lokalen Version basiert, sondern der auf der im Repository eingecheckten.
