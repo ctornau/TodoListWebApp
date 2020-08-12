@@ -251,14 +251,17 @@ Um Spring Data zu nutzen, muss es via Dependency in der ```pom.xml``` eingebunde
 Die Spring Data JPA stellt dabei ein sogenanntes Repository zur Verfügung, welches als DAO (Data Access Object) fungiert. Dabei muss die Klasse nicht selbst geschrieben werden, sondern sie wird von Spring Boot Data JPA selbständig aus dem Interface generiert:
 
 ```java
-package org.examplespringboot.simplespringboot.repository;
+package org.todolistwebapp.repository;
 
-import org.examplespringboot.org.todolistwebapp.model.TodoTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.todolistwebapp.model.TodoTask;
+
+import java.util.List;
 
 @Repository
 public interface TodoTaskRepository extends JpaRepository<TodoTask, Long> {
+    List<TodoTask> findByOwner(String owner);
 }
 ```
 
