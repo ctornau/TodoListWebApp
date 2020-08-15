@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolistwebapp
+spec:
+  selector:
+    matchLabels:
+      app: todolistwebapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: todolistwebapp
+    spec:
+      containers:
+        - image: todolistwebapp:1
+          name: todolistwebapp
+          ports:
+          - containerPort: 8080
+            protocol: TCP

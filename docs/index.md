@@ -423,6 +423,32 @@ Mit ```show databases;``` lässt sich die Liste der Datenbanken anzeigen und wir
 4 rows in set (0.000 sec)
 ```
 
+## Konfiguration und Deployment der Spring-Boot-Anwendung
+
+```docker build . -t todolistwebapp:1```
+
+```kubectl apply -f k8s/springboot/deployment.yaml```
+
+```kubectl get pods```
+
+```text
+NAME                              READY   STATUS    RESTARTS   AGE
+mariadb-7999774f68-ml2sl          1/1     Running   0          39m
+todolistwebapp-674c847cf6-jg9k4   1/1     Running   0          40s
+```
+
+```kubectl logs todolistwebapp-674c847cf6-jg9k4```
+
+```text
+2020-08-15 16:23:22.665  INFO 1 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2020-08-15 16:23:22.675  INFO 1 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-08-15 16:23:22.688  INFO 1 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-08-15 16:23:22.847  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2020-08-15 16:23:22.850  INFO 1 --- [           main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2020-08-15 16:23:23.014  INFO 1 --- [           main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2020-08-15 16:23:23.025  INFO 1 --- [           main] o.todolistwebapp.TodoListWebApplication  : Started TodoListWebApplication in 4.415 seconds (JVM running for 5.313)
+```
+
 # Weitere Dokumentation
 
 ## Spring Boot
