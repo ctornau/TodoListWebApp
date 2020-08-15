@@ -362,44 +362,66 @@ sendgrid.apikey=der-Key
 sendgrid.senderemailaddress=die-absenderadresse@somewhere.com
 ```
 
-# Memo
+# Deployment unter Kubernetes (K8s)
 
-MySQL Docker Start-Up
+Im Folgenden wird ein Kubernetes-Deployment auf einem beliebigen Kubernetes-Cluster aufgebaut
 
-```docker run --name springboot-mariadb -e MYSQL_ROOT_PASSWORD=pass!word -e MYSQL_DATABASE=springbootdb -p 3306:3306 -d mariadb:latest```
+## Deployment von MariaDB
 
-Kubernetes-Deployment von MariaDB mithilfe von  
+Kubernetes-__Deployment__ von MariaDB mithilfe von  
 
 ```kubectl run mariadb --image=mariadb:latest --env="MYSQL_ROOT_PASSWORD=pass!word" --env="MYSQL_DATABASE=springbootdb" --port=3306```
 
-Das Command ```kubectl get pods``` zeigt einen Pod:
+Das Command ```kubectl get pods``` zeigt einen __Pod__:
 
 ```text
 NAME                       READY   STATUS    RESTARTS   AGE
 mariadb-67fb996878-q5qmm   1/1     Running   0          2m28s
 ```
 
-Mithilfe von ```kubectl delete pod mariadb-***``` lässt sich der Pod entfernen. Es wird jedoch sogleich ein neuer Pod gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
+Mithilfe von ```kubectl delete pod mariadb-***``` lässt sich der __Pod__ entfernen. Dies wird von Kubernetes erkannt und als ausgleich sogleich ein neuer Pod gestartet. Dies kann mit ```kubectl get pods``` geprüft werden, wo sich der Pod-Name und die Zeit nun verändert haben sollten. 
 
 Mithilfe von 
 
 ```kubectl get deployment mariadb -o yaml > k8s/mariadb/deployment.yaml```
 
-lässt sich das Deployment in einer YAML-Datei persistieren (Das Verzeichnis ```k8s/mariadb``` muss dazu existieren). 
+lässt sich das __Deployment__ in einer YAML-Datei persistieren (Das Verzeichnis ```k8s/mariadb``` muss dazu existieren). 
 
-Das Deployment kann mit 
+Das __Deployment__ kann mit ```kubectl delete deployment mariadb``` wieder entfernt werden.
 
-```kubectl delete deployment mariadb```
+Wir editieren die Datei, so wie sie im Git-Repository schon hinterlegt ist. Mit dem Befehl ```kubectl apply -f k8s/mariadb/deployment.yaml``` lässt sich das __Deployment__ aus der editierten YAML-Datei (im Git-Repository schon hinterlegt) wieder einspielen. Ein neuer __Pod__ wird wieder gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
 
-wieder entfernt werden.
+## Zugriff über einen Kubernetes-Service
 
-Mit dem Befehl
+Mithilfe eines Services kann auf MariaDB zugegriffen werden. Wir deployen einen Service mit Cluster-IP, der dafür sorgt, dass Kubernetes-Intern MariaDB aufgerufen werden kann. Der Service ist in der Datei ```service.yaml``` hinterlegt:
 
-```kubectl create -f k8s/mariadb/deployment.yaml```
+```kubectl apply -f k8s/mariadb/service.yaml```
 
-lässt sich das Deployment aus der YAML-Datei wieder einspielen. Der Pod wird wieder gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
+Mit ```kubectl get service``` lassen sich installierte Services im Kubernetes-Cluster anzeigen:
 
-https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
+```text
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP    3d7h
+mariadb      ClusterIP   None         <none>        3306/TCP   10m
+```
+
+Nun starten wir ein weiteres Deployment, welches über den MariaDB-Client auf der Kommandozeile auf den MariaDB-Server zugreift:
+
+```kubectl run -it --rm --image=mariadb:latest --restart=Never mariadb-client -- mariadb -h mariadb -ppass!word```
+
+Mit ```show databases;``` lässt sich die Liste der Datenbanken anzeigen und wir erkennen, dass die Datenbank ```springbootdb``` angelegt worden ist:
+
+```text
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| springbootdb       |
++--------------------+
+4 rows in set (0.000 sec)
+```
 
 # Weitere Dokumentation
 
