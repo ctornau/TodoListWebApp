@@ -498,13 +498,23 @@ Man erkennt an der folgenden Ausgabe ```Started TodoListWebApplication in 4.415 
 2020-08-15 16:23:23.025  INFO 1 --- [           main] o.todolistwebapp.TodoListWebApplication  : Started TodoListWebApplication in 4.415 seconds (JVM running for 5.313)
 ```
 
-## Ingress
+## Ingress - Zugriff von extern
+
+Unsere Spring-Boot-Applikation soll von extern erreicht werden können. Kubernetes bietet mehrere Möglichkeiten, dies zu bewerkstelligen. Wir wählen die Möglichkeit des Ingress. Hier befindet sich innerhalb von Produktionsumgebungen LoadBalancer vor der Applikation, die den Traffic aufteilen. 
+
+Doch zunächst muss ein Service erstellt werden:
 
 ```kubectl apply -f k8s/springboot/service.yaml```
 
+Dann erzeugen wir mit dem folgenden Befehl einen Nginx Ingress. Nginx ist ein Webserver, der sich auch als Reverse-Proxy benutzen lässt:
+
 ```kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml```
 
+Mit Hilfe des folgenden Befehls lässt sich anzeigen, ob der Ingress korrekt eingerichtet worden ist:
+
 ```kubectl -n ingress-nginx get pod,service```
+
+Die Ausgabe sollte in etwa wie folgt aussehen:
 
 ```text
 NAME                                            READY   STATUS      RESTARTS   AGE
@@ -517,7 +527,11 @@ service/ingress-nginx-controller             LoadBalancer   10.96.255.145   loca
 service/ingress-nginx-controller-admission   ClusterIP      10.98.124.103   <none>        443/TCP                      23s
 ```
 
+Nun muss dem Nginx-Server mitgeteilt werden, unter welcher URL er die hereinkommenden Requests routen soll. Dies wird wie folgt getan:
+
 ```kubectl apply -f k8s/springboot/ingress.yaml```
+
+Nun sollte die Application unter der URL http://localhost:80 lokal erreichbar sein. Ggf. muss OAuth2 zusätzlich konfiguriert werden, dass auch von der neuen URL Requests entgegengenommen werden. 
 
 # Weitere Dokumentation
 
@@ -531,8 +545,8 @@ service/ingress-nginx-controller-admission   ClusterIP      10.98.124.103   <non
 
 ## Docker und Kubernetes
 
+* [Docker Docs](https://docs.docker.com/)
 * [Docker Kubernetes Dojo](https://github.com/javaplus/DockerKubesDojo)
-
 
 # Impressum
 
