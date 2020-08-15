@@ -390,7 +390,7 @@ Im Folgenden wird nun ein Kubernetes-Deployment der Applikation auf einem belieb
 
 ## Deployment von MariaDB
 
-Kubernetes-__Deployment__ von MariaDB mithilfe von  
+Kubernetes- __Deployment__ von MariaDB mithilfe von  
 
 ```kubectl run mariadb --image=mariadb:latest --env="MYSQL_ROOT_PASSWORD=pass!word" --env="MYSQL_DATABASE=springbootdb" --port=3306```
 
