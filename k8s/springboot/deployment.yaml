@@ -29,6 +29,8 @@ spec:
               value: key-von-sendgrid
             - name: sendgrid.senderemailaddress
               value: verifizierte-emailadresse-bei-sendgrid
+            - name: spring.data.mongodb.host
+              value: mongodb
           ports:
           - containerPort: 8080
             protocol: TCP

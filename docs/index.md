@@ -423,6 +423,12 @@ Mit ```show databases;``` lässt sich die Liste der Datenbanken anzeigen und wir
 4 rows in set (0.000 sec)
 ```
 
+## MongoDB Deployment
+
+```kubectl apply -f k8s/mongodb/deployment.yaml```
+
+```kubectl apply -f k8s/mongodb/service.yaml```
+
 ## Konfiguration und Deployment der Spring-Boot-Anwendung
 
 ```docker build . -t todolistwebapp:1```
