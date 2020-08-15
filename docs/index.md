@@ -177,6 +177,10 @@ docker run -p8080:8080 ctornau/todolistwebapp
 
 das automatisch generierte Docker-Image heruntergeladen und gestartet werden. Dabei handelt es sich nicht anders als bei den anderen Startmöglichkeiten um einen Build, der auf der lokalen Version basiert, sondern der auf der im Repository eingecheckten.
 
+## Innerhalb eines Kubernetes-Clusters
+
+Weiter unten ist beschrieben, wie die Applikation innerhalb eines Kubernetes-Clusters betrieben werden kann.
+
 ## Zusätzlich erforderlich für den Start der Applikation
 
 Es ist darauf zu achten, dass in jedem Fall ein MySQL-Server bzw. MariaDB-Server lokal installiert und gestartet ist. Weiterhin ist MongoDB in einer Default-Konfiguration nötig.
@@ -339,6 +343,15 @@ spring.security.oauth2.client.registration.google.clientId=die-client-id.apps.go
 spring.security.oauth2.client.registration.google.clientSecret=das-secret
 ```
 
+Diese Werte werden durch die Kubernetes-Environment-Variablen, sollte ein Kubernetes-Deployment stattfinden, überschrieben (in ```k8s/springboot/deployment.yaml```):
+
+```yaml
+- name: spring.security.oauth2.client.registration.google.clientId
+  value: die-client-id.apps.googleusercontent.com
+- name: spring.security.oauth2.client.registration.google.clientSecret
+  value: das-secret
+```
+
 # Email-Versenden mit SendGrid
 
 Der Dienst [SendGrid](https://sendgrid.com/) ist ein Cloud-Dienst zum Versenden von Emailnachrichten. Theoretisch wäre es möglich, von jedem beliebigen Rechner Emailnachrichten zu versenden. Jedoch schützen sich die meisten Empfängerserver mittlerweile vor Emails von zuvor unbekannten IP-Adressen und führen auch weitere Schutzmaßnahmen durch, um Spam zu unterdrücken. Deshalb nutzt man am besten einen entsprechenden Dienst, der den Versand der Emails managt. 
@@ -362,9 +375,18 @@ sendgrid.apikey=der-Key
 sendgrid.senderemailaddress=die-absenderadresse@somewhere.com
 ```
 
+Auch diese Werte werden bei einem Kubernetes-Deployment durch die Environment-Variablen (in ```k8s/springboot/deployment.yaml```) überschrieben:
+
+```yaml
+- name: sendgrid.apikey
+  value: key-von-sendgrid
+- name: sendgrid.senderemailaddress
+  value: verifizierte-emailadresse-bei-sendgrid
+```
+
 # Deployment unter Kubernetes (K8s)
 
-Im Folgenden wird ein Kubernetes-Deployment auf einem beliebigen Kubernetes-Cluster aufgebaut
+Im Folgenden wird nun ein Kubernetes-Deployment der Applikation auf einem beliebigen Kubernetes-Cluster aufgebaut.
 
 ## Deployment von MariaDB
 
@@ -391,7 +413,7 @@ Das __Deployment__ kann mit ```kubectl delete deployment mariadb``` wieder entfe
 
 Wir editieren die Datei, so wie sie im Git-Repository schon hinterlegt ist. Mit dem Befehl ```kubectl apply -f k8s/mariadb/deployment.yaml``` lässt sich das __Deployment__ aus der editierten YAML-Datei (im Git-Repository schon hinterlegt) wieder einspielen. Ein neuer __Pod__ wird wieder gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
 
-## Zugriff über einen Kubernetes-Service
+## Zugriff über einen Service in Kubernetes
 
 Mithilfe eines Services kann auf MariaDB zugegriffen werden. Wir deployen einen Service mit Cluster-IP, der dafür sorgt, dass Kubernetes-Intern MariaDB aufgerufen werden kann. Der Service ist in der Datei ```service.yaml``` hinterlegt:
 
@@ -425,25 +447,46 @@ Mit ```show databases;``` lässt sich die Liste der Datenbanken anzeigen und wir
 
 ## MongoDB Deployment
 
+Das __Deployment__ der Datenbank MongoDB verhält sich ähnlich.
+
+Mit dem Kommando
+
 ```kubectl apply -f k8s/mongodb/deployment.yaml```
+
+wird der __Pod__ deployt.
+
+Dieser __Pod__ erhält einen __Service__ mit:
 
 ```kubectl apply -f k8s/mongodb/service.yaml```
 
 ## Konfiguration und Deployment der Spring-Boot-Anwendung
 
+Möchte man seine eigenen Änderungen testen, so ist das Docker-Image wie folgt zu bauen:
+
 ```docker build . -t todolistwebapp:1```
+
+Bei eigenen Änderungen muss das referenzierte Docker-Image in ```k8s/springboot/deployment.yaml``` angepasst werden. Hier ist das öffentliche Image des Builds standardmäßig angegeben. Dann kann ein __Deployment__ wie folgt erfolgen:  
 
 ```kubectl apply -f k8s/springboot/deployment.yaml```
 
+Das __Deployment__ kann verifiziert werden:
+
 ```kubectl get pods```
+
+Es sollte in etwa diese Ausgabe zu sehen sein: 
 
 ```text
 NAME                              READY   STATUS    RESTARTS   AGE
-mariadb-7999774f68-ml2sl          1/1     Running   0          39m
-todolistwebapp-674c847cf6-jg9k4   1/1     Running   0          40s
+mariadb-7999774f68-ml2sl          1/1     Running   0          6h26m
+mongodb-665d847848-sd42p          1/1     Running   0          100m
+todolistwebapp-5c7c8d49f5-kzr4w   1/1     Running   0          56m
 ```
 
-```kubectl logs todolistwebapp-674c847cf6-jg9k4```
+Die Pod-internen Logs lassen sich wie folgt anzeigen:
+
+```kubectl logs todolistwebapp-5c7c8d49f5-kzr4w```
+
+Man erkennt an der folgenden Ausgabe ```Started TodoListWebApplication in 4.415 seconds```, dass der Start erfolgreich war:
 
 ```text
 2020-08-15 16:23:22.665  INFO 1 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
