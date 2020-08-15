@@ -14,8 +14,21 @@ spec:
         app: todolistwebapp
     spec:
       containers:
-        - image: todolistwebapp:1
+        - image: ctornau/todolistwebapp:latest
           name: todolistwebapp
+          env:
+            - name: spring.datasource.url
+              value: jdbc:mariadb://mariadb:3306/springbootdb
+            - name: spring.datasource.password
+              value: pass!word
+            - name: spring.security.oauth2.client.registration.google.clientId
+              value: die-client-id.apps.googleusercontent.com
+            - name: spring.security.oauth2.client.registration.google.clientSecret
+              value: das-secret
+            - name: sendgrid.apikey
+              value: key-von-sendgrid
+            - name: sendgrid.senderemailaddress
+              value: verifizierte-emailadresse-bei-sendgrid
           ports:
           - containerPort: 8080
             protocol: TCP

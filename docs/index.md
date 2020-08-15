@@ -449,6 +449,27 @@ todolistwebapp-674c847cf6-jg9k4   1/1     Running   0          40s
 2020-08-15 16:23:23.025  INFO 1 --- [           main] o.todolistwebapp.TodoListWebApplication  : Started TodoListWebApplication in 4.415 seconds (JVM running for 5.313)
 ```
 
+## Ingress
+
+```kubectl apply -f k8s/springboot/service.yaml```
+
+```kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml```
+
+```kubectl -n ingress-nginx get pod,service```
+
+```text
+NAME                                            READY   STATUS      RESTARTS   AGE
+pod/ingress-nginx-admission-create-2bh27        0/1     Completed   0          23s
+pod/ingress-nginx-admission-patch-xzvcp         0/1     Completed   1          23s
+pod/ingress-nginx-controller-77f5884bdd-mfqw4   1/1     Running     0          23s
+
+NAME                                         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/ingress-nginx-controller             LoadBalancer   10.96.255.145   localhost     80:31110/TCP,443:31396/TCP   23s
+service/ingress-nginx-controller-admission   ClusterIP      10.98.124.103   <none>        443/TCP                      23s
+```
+
+```kubectl apply -f k8s/springboot/ingress.yaml```
+
 # Weitere Dokumentation
 
 ## Spring Boot
