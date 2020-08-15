@@ -383,9 +383,9 @@ Mithilfe von ```kubectl delete pod mariadb-***``` lässt sich der Pod entfernen.
 
 Mithilfe von 
 
-```kubectl get deployment mariadb -o yaml > k8s/mariadb-deployment.yaml```
+```kubectl get deployment mariadb -o yaml > k8s/mariadb/deployment.yaml```
 
-lässt sich das Deployment in einer YAML-Datei persistieren. 
+lässt sich das Deployment in einer YAML-Datei persistieren (Das Verzeichnis ```k8s/mariadb``` muss dazu existieren). 
 
 Das Deployment kann mit 
 
@@ -395,9 +395,11 @@ wieder entfernt werden.
 
 Mit dem Befehl
 
-```kubectl create -f k8s/mariadb-deployment.yaml```
+```kubectl create -f k8s/mariadb/deployment.yaml```
 
 lässt sich das Deployment aus der YAML-Datei wieder einspielen. Der Pod wird wieder gestartet. Dies kann mit ```kubectl get pods``` geprüft werden. 
+
+https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
 
 # Weitere Dokumentation
 
