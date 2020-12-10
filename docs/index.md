@@ -140,6 +140,14 @@ Der Test lässt sich in der IDE (hier am Beispiel von Jetbrains IntelliJ gezeigt
 
 # Start der Applikation
 
+## Laufende Instanz von MariaDB oder MySql notwendig
+
+Um die Applikation zu starten, wird eine laufende Instanz von MariaDB oder MySql unter dessen Standardport ```3306``` benötigt. Hierfür kann entweder der Server installiert, gestartet und die Datenbank ```springbootdb``` angelegt werden oder aber folgendes Docker-Kommando ausgeführt werden:
+
+```text
+docker run -p3306:3306 -d -e MYSQL_DATABASE=springbootdb -e MYSQL_ROOT_PASSWORD=pass!word mariadb:latest
+```
+
 ## Aus der Entwicklungsumgebung
 
 Die Applikation lässt sich direkt aus der IDE mit einem Rechts-Klick auf die Applikation und dann `Run` starten:
