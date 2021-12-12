@@ -5,17 +5,18 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.4</version>
+		<version>2.6.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.todolistwebapp</groupId>
 	<artifactId>todolistwebapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>todolistwebapp</name>
 	<description>Beispielprojekt einer einfachen Spring-Boot-Anwendung, die eine Todo-Listen-Verwaltung darstellt</description>
 
 	<properties>
 		<java.version>11</java.version>
+		<log4j2.version>2.15.0</log4j2.version> <!-- Fix for log4j2 vulnerability as seen on https://www.springcloud.io/post/2021-12/log4j2-vulnerability-and-spring-boot/#maven -->
 	</properties>
 
 	<dependencies>
