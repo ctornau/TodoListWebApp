@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<log4j2.version>2.15.0</log4j2.version> <!-- Fix for log4j2 vulnerability as seen on https://www.springcloud.io/post/2021-12/log4j2-vulnerability-and-spring-boot/#maven -->
+		<log4j2.version>2.16.0</log4j2.version> <!-- Fix for log4j2 vulnerability as seen on https://www.springcloud.io/post/2021-12/log4j2-vulnerability-and-spring-boot/#maven -->
 	</properties>
 
 	<dependencies>
